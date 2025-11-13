@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-
 import { ApiError } from '@/lib/api';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 export default function LoginForm() {
     // Hooks
@@ -85,73 +87,47 @@ export default function LoginForm() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-                <label 
-                htmlFor="email" 
-                className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                Email
-                </label>
-                <input
+            <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
                 type="email"
                 id="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`
-                    w-full px-3 py-2 border rounded-md 
-                    focus:outline-none focus:ring-2 focus:ring-blue-500
-                    text-gray-900 placeholder-gray-400
-                    ${errors.email ? 'border-red-500' : 'border-gray-300'}
-                `}
+                aria-invalid={!!errors.email}
                 required
                 disabled={isLoading}
                 />
                 {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                <p className="text-sm text-red-600">{errors.email}</p>
                 )}
             </div>
 
-            <div>
-                <label 
-                htmlFor="password" 
-                className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                Password
-                </label>
-                <input
+            <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
                 type="password"
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`
-                    w-full px-3 py-2 border rounded-md 
-                    text-gray-900 placeholder-gray-400
-                    focus:outline-none focus:ring-2 focus:ring-blue-500
-                    ${errors.password ? 'border-red-500' : 'border-gray-300'}
-                `}
+                aria-invalid={!!errors.password}
                 required
                 disabled={isLoading}
                 />
                 {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                <p className="text-sm text-red-600">{errors.password}</p>
                 )}
             </div>
 
-            <button
+            <Button
                 type="submit"
                 disabled={isLoading}
-                className="
-                w-full bg-blue-600 text-white py-2 px-4 rounded-md 
-                hover:bg-blue-700 
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
-                disabled:bg-blue-400 disabled:cursor-not-allowed 
-                transition-colors
-                "
+                className="w-full"
             >
                 {isLoading ? 'Logging in...' : 'Login'}
-            </button>
+            </Button>
             </form>
         </div>
         </div>

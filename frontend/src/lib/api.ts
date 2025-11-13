@@ -16,6 +16,25 @@ export interface User {
 }
 
 /**
+ * Position type from Laravel
+ */
+export interface Position {
+  id: number;
+  company: string | null;
+  recruiter_company: string | null;
+  title: string;
+  description: string | null;
+  status: string;
+  location: string | null;
+  salary: string | null;
+  url: string | null;
+  notes: string | null;
+  applied_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
  * Auth response from login endpoint
  */
 interface AuthResponse {
@@ -88,6 +107,11 @@ export class ApiClient {
       throw new ApiError(error.message || 'An error occurred', error.errors);
     }
 
+    // Handle 204 No Content responses
+    if (response.status === 204) {
+      return undefined as T;
+    }
+
     return response.json();
   }
 
@@ -131,6 +155,53 @@ export class ApiClient {
    */
   static isAuthenticated(): boolean {
     return this.getToken() !== null;
+  }
+
+  /**
+   * POSITION METHODS
+   */
+
+  /**
+   * Get all positions
+   */
+  static async getPositions(): Promise<Position[]> {
+    return this.request<Position[]>('/positions');
+  }
+
+  /**
+   * Get a single position by ID
+   */
+  static async getPosition(id: number): Promise<Position> {
+    return this.request<Position>(`/positions/${id}`);
+  }
+
+  /**
+   * Create a new position
+   */
+  static async createPosition(data: Partial<Position>): Promise<Position> {
+    return this.request<Position>('/positions', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  /**
+   * Update an existing position
+   */
+  static async updatePosition(id: number, data: Partial<Position>): Promise<Position> {
+    return this.request<Position>(`/positions/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  /**
+   * Delete a position
+   */
+  static async deletePosition(id: number): Promise<void> {
+    await this.request<void>(`/positions/${id}`, {
+      method: 'DELETE',
+    });
   }
 }
 

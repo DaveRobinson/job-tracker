@@ -3,6 +3,7 @@
 
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function HomePage() {
   const { user, loading, logout } = useAuth();
@@ -38,19 +39,19 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-2">
-              <Link
-                href="/dashboard"
-                className="block w-full text-center bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Go to Dashboard
-              </Link>
+              <Button asChild className="w-full">
+                <Link href="/dashboard">
+                  Go to Dashboard
+                </Link>
+              </Button>
 
-              <button
+              <Button
+                variant="outline"
                 onClick={logout}
-                className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors"
+                className="w-full"
               >
                 Logout
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
@@ -62,12 +63,11 @@ export default function HomePage() {
               </p>
             </div>
 
-            <Link
-              href="/login"
-              className="block w-full text-center bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Login
-            </Link>
+            <Button asChild className="w-full">
+              <Link href="/login">
+                Login
+              </Link>
+            </Button>
           </div>
         )}
 
