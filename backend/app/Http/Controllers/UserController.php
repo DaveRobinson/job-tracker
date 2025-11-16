@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Position;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of users (admin only).
+     *
+     * @response \App\Models\User[]
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         // Authorization check - only admins can list users
         if (!$request->user()->is_admin) {
@@ -27,8 +30,10 @@ class UserController extends Controller
 
     /**
      * Display positions for a specific user (admin only).
+     *
+     * @response \App\Models\Position[]
      */
-    public function positions(Request $request, string $id)
+    public function positions(Request $request, string $id): JsonResponse
     {
         // Authorization check - only admins can view other users' positions
         if (!$request->user()->is_admin) {

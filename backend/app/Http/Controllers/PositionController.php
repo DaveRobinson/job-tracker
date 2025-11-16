@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Position;
 use App\PositionStatus;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -11,8 +12,10 @@ class PositionController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @response \App\Models\Position[]
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $user = $request->user();
         $query = Position::with('user:id,name');
@@ -36,8 +39,10 @@ class PositionController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @response 201 \App\Models\Position
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $user = $request->user();
 
@@ -79,8 +84,10 @@ class PositionController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * @response \App\Models\Position
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         $position = Position::with('user:id,name')->findOrFail($id);
 
@@ -91,8 +98,10 @@ class PositionController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @response \App\Models\Position
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): JsonResponse
     {
         $position = Position::findOrFail($id);
 
@@ -131,7 +140,7 @@ class PositionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
         $position = Position::findOrFail($id);
 
