@@ -6,6 +6,7 @@ interface PositionsTableProps {
   positions: Position[];
   onEdit?: (position: Position) => void;
   onDelete?: (id: number) => void;
+  isAdmin?: boolean;
 }
 
 const getStatusBadgeClass = (status: string) => {
@@ -25,7 +26,7 @@ const getStatusBadgeClass = (status: string) => {
   }
 };
 
-export default function PositionsTable({ positions, onEdit, onDelete }: PositionsTableProps) {
+export default function PositionsTable({ positions, onEdit, onDelete, isAdmin }: PositionsTableProps) {
   if (positions.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-md p-8 text-center">
@@ -58,6 +59,11 @@ export default function PositionsTable({ positions, onEdit, onDelete }: Position
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Applied
               </th>
+              {isAdmin && (
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Owner
+                </th>
+              )}
               {(onEdit || onDelete) && (
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
@@ -113,6 +119,11 @@ export default function PositionsTable({ positions, onEdit, onDelete }: Position
                     : '-'
                   }
                 </td>
+                {isAdmin && (
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {position.user.name}
+                  </td>
+                )}
                 {(onEdit || onDelete) && (
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end gap-2">

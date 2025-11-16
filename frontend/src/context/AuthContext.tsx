@@ -1,17 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { ApiClient, ApiError } from '@/lib/api';
-
-// user interface based on the laravel response
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  email_verified_at: string | null;
-  created_at: string;
-  updated_at: string;
-}
+import { api, User, ApiError } from '@/lib/api';
 
 /**
  * The value provided by AuthContext and returned by useAuth()
@@ -38,8 +28,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const checkAuth = async () => {
             try {
                 // If there's a token, try to get current user
-                if (ApiClient.isAuthenticated()) {
-                const currentUser = await ApiClient.getCurrentUser();
+                if (api.client.isAuthenticated()) {
+                const currentUser = await api.auth.getCurrentUser();
                 setUser(currentUser);
                 }
             } catch (error) {
@@ -56,12 +46,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
     // login
     const login = async (email: string, password: string) => {
-        const response = await ApiClient.login(email, password);
+        const response = await api.auth.login(email, password);
         setUser(response.user);
     };
 
     const logout = async () => {
-        await ApiClient.logout();
+        await api.auth.logout();
         setUser(null);
     };
 
