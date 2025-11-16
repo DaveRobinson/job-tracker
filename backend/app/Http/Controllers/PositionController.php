@@ -12,9 +12,24 @@ class PositionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $positions = Position::orderBy('created_at', 'desc')->get();
+        $user = $request->user();
+        $query = Position::with('user:id,name');
+
+        // Determine scope based on query parameters (admin only) or user role
+        if ($user->is_admin && $request->query('all_users') === 'true') {
+            // Admin viewing all positions across all users
+            // No filter needed
+        } elseif ($user->is_admin && $request->has('user_id')) {
+            // Admin viewing a specific user's positions
+            $query->where('user_id', $request->query('user_id'));
+        } else {
+            // Default: show only the authenticated user's positions
+            $query->where('user_id', $user->id);
+        }
+
+        $positions = $query->orderBy('created_at', 'desc')->get();
 
         return response()->json($positions);
     }
@@ -24,7 +39,10 @@ class PositionController extends Controller
      */
     public function store(Request $request)
     {
+        $user = $request->user();
+
         $validated = $request->validate([
+            'user_id' => $user->is_admin ? 'nullable|exists:users,id' : 'prohibited',
             'company' => 'nullable|string|max:255',
             'recruiter_company' => 'nullable|string|max:255',
             'title' => 'required|string|max:255',
@@ -48,7 +66,13 @@ class PositionController extends Controller
             ], 422);
         }
 
+        // Assign user: admin can specify, regular users get their own ID
+        if (!isset($validated['user_id'])) {
+            $validated['user_id'] = $user->id;
+        }
+
         $position = Position::create($validated);
+        $position->load('user:id,name');
 
         return response()->json($position, 201);
     }
@@ -58,7 +82,9 @@ class PositionController extends Controller
      */
     public function show(string $id)
     {
-        $position = Position::findOrFail($id);
+        $position = Position::with('user:id,name')->findOrFail($id);
+
+        $this->authorize('view', $position);
 
         return response()->json($position);
     }
@@ -69,6 +95,8 @@ class PositionController extends Controller
     public function update(Request $request, string $id)
     {
         $position = Position::findOrFail($id);
+
+        $this->authorize('update', $position);
 
         $validated = $request->validate([
             'company' => 'nullable|string|max:255',
@@ -95,6 +123,7 @@ class PositionController extends Controller
         }
 
         $position->update($validated);
+        $position->load('user:id,name');
 
         return response()->json($position);
     }
@@ -105,6 +134,9 @@ class PositionController extends Controller
     public function destroy(string $id)
     {
         $position = Position::findOrFail($id);
+
+        $this->authorize('delete', $position);
+
         $position->delete();
 
         return response()->json(null, 204);

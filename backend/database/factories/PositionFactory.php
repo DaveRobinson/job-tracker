@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use App\PositionStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,6 +21,7 @@ class PositionFactory extends Factory
         $viaAgency = fake()->boolean(30);
 
         return [
+            'user_id' => User::factory(),
             'company' => $viaAgency ? null : fake()->company(),
             'recruiter_company' => $viaAgency ? fake()->company() : null,
             'title' => fake()->jobTitle(),

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\UserController;
 
 Route::get('/ping', function () {
     return response()->json([
@@ -26,5 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/positions/{id}', [PositionController::class, 'update']);
     Route::patch('/positions/{id}', [PositionController::class, 'update']);
     Route::delete('/positions/{id}', [PositionController::class, 'destroy']);
+
+    // User routes (admin only - enforced in controller)
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}/positions', [UserController::class, 'positions']);
 });
 

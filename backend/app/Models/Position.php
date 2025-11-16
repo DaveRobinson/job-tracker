@@ -5,12 +5,14 @@ namespace App\Models;
 use App\PositionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Position extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'company',
         'recruiter_company',
         'title',
@@ -27,4 +29,9 @@ class Position extends Model
         'applied_at' => 'date',
         'status' => PositionStatus::class,
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -18,6 +18,7 @@ class AdminUserSeeder extends Seeder
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
+            'is_admin' => true,
         ]);
 
         $this->command->info('✓ Admin user created');
