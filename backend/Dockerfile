@@ -1,4 +1,4 @@
-FROM php:8.4-cli
+FROM php:8.5-cli
 
 # Build argument - set to "false" for production builds
 ARG INSTALL_DEV=true
